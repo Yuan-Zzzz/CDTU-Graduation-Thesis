@@ -1,87 +1,73 @@
 # CDTU 毕业论文 Word 文档生成工具
 
-基于 **Pandoc** 的 Markdown 转 Word 工具，用于生成符合 **CDTU（成都工业学院）** 毕业论文格式要求的 Word 文档。
+用 Pandoc 把 Markdown 转成 Word，专门给成都工业学院的毕业论文格式定制。
 
-> 采用「Markdown 写作 + Word 模板 + 自动引用」的工作流，告别 Word 排版困扰。
+写论文不用再跟 Word 的排版打架了，用 Markdown 写完一键导出。
 
----
+## 功能
 
-## 功能特性
+- Markdown 写作，纯文本方便 git 版本控制
+- 自动生成目录，支持三级标题
+- 参考文献用 GB/T 7714-2015 格式
+- 基于 Word 模板，格式统一
+- Windows / macOS / Linux 都能用
+- 一键编译，不用手动操作
 
-- ✅ 使用 Markdown 编写论文内容，纯文本易于版本控制
-- ✅ 支持自动目录生成（三级标题深度可配置）
-- ✅ 支持 GB/T 7714-2015 格式参考文献引用
-- ✅ 基于 Word 模板渲染，确保格式符合学校要求
-- ✅ 跨平台支持（Windows / macOS / Linux）
-- ✅ 一键编译脚本，无需手动操作
+## 依赖
 
----
+| 软件 | 版本 | 用途 | 下载 |
+|------|------|------|------|
+| Pandoc | ≥ 2.14 | Markdown 转 Word | [官网](https://pandoc.org/installing.html) |
+| Microsoft Word | 2016+ | 编辑模板、查看文档 | [Microsoft 365](https://www.microsoft.com/zh-cn/microsoft-365) |
 
-## 依赖项
-
-### 必需软件
-
-| 软件 | 版本要求 | 用途 | 下载链接 |
-|------|---------|------|----------|
-| **Pandoc** | ≥ 2.14 | Markdown 转 Word 核心工具 | [官网下载](https://pandoc.org/installing.html) |
-| **Microsoft Word** | 2016+ | 模板编辑与文档查看 | [Microsoft 365](https://www.microsoft.com/zh-cn/microsoft-365) |
-
-### 验证安装
+验证 Pandoc 安装：
 
 ```bash
-# 检查 Pandoc 是否安装成功
 pandoc --version
 ```
-
----
 
 ## 文件结构
 
 ```
 CDTU-Graduation-Thesis/
-├── thesis.md                              # 论文正文（Markdown 源文件）
-├── refs.bib                               # 参考文献库（BibTeX 格式）
-├── template.docx                          # Word 格式模板
+├── thesis.md              # 论文正文（Markdown）
+├── refs.bib               # 参考文献库
+├── template.docx          # Word 格式模板
 ├── china-national-standard-gb-t-7714-2015-numeric.csl  # 引用格式
-├── build-docx.sh                          # Linux/macOS 编译脚本
-├── build-docx.bat                         # Windows 编译脚本
-├── thesis.docx                            # 生成的论文 Word 文件（自动生成）
-├── README.md                              # 本说明文档
-└── .gitignore                             # Git 忽略配置
+├── build-docx.sh          # Linux/macOS 编译脚本
+├── build-docx.bat         # Windows 编译脚本
+├── thesis.docx            # 生成的 Word 文件
+├── README.md
+└── .gitignore
 ```
-
----
 
 ## 快速开始
 
-### 1. 安装 Pandoc
+### 安装 Pandoc
 
-**macOS:**
+macOS:
 ```bash
 brew install pandoc
 ```
 
-**Ubuntu/Debian:**
+Ubuntu/Debian:
 ```bash
-sudo apt-get update
-sudo apt-get install pandoc
+sudo apt-get update && sudo apt-get install pandoc
 ```
 
-**Windows:**
-下载安装包并安装：[Pandoc Releases](https://github.com/jgm/pandoc/releases)
+Windows: 从 [GitHub Releases](https://github.com/jgm/pandoc/releases) 下载安装包
 
-### 2. 克隆仓库
+### 克隆仓库
 
 ```bash
 git clone https://github.com/Yuan-Zzzz/CDTU-Graduation-Thesis.git
 cd CDTU-Graduation-Thesis
 ```
 
-### 3. 编辑论文内容
+### 写论文
 
-打开 `thesis.md` 文件，使用 Markdown 语法编写论文内容。
+编辑 `thesis.md` 文件：
 
-**示例：**
 ```markdown
 ---
 title: "基于Unity的2D游戏设计与实现"
@@ -104,9 +90,9 @@ bibliography: refs.bib
 ...
 ```
 
-### 4. 添加参考文献
+### 添加参考文献
 
-在 `refs.bib` 中添加参考文献条目：
+在 `refs.bib` 里添加：
 
 ```bibtex
 @book{sommerville2015,
@@ -117,146 +103,128 @@ bibliography: refs.bib
 }
 ```
 
-然后在正文中使用 `[@sommerville2015]` 引用。
+正文里用 `[@sommerville2015]` 引用。
 
-### 5. 生成 Word 文档
+### 生成 Word
 
-**Linux / macOS:**
+Linux/macOS:
 ```bash
-chmod +x build-docx.sh
-./build-docx.sh
+chmod +x build-docx.sh && ./build-docx.sh
 ```
 
-**Windows:**
+Windows:
 ```batch
 call build-docx.bat
 ```
 
-编译完成后，将生成 `thesis.docx` 文件。
-
----
+生成后的文件是 `thesis.docx`。
 
 ## 使用说明
 
-### Markdown 语法支持
+### Markdown 语法
 
-Pandoc 支持的 Markdown 扩展语法：
+| 功能 | 语法 | 效果 |
+|------|------|------|
+| 一级标题 | `# 标题` | 章标题 |
+| 二级标题 | `## 标题` | 1.1 小节 |
+| 三级标题 | `### 标题` | 1.1.1 小节 |
+| 粗体 | `**文字**` | 加粗 |
+| 斜体 | `*文字*` | 斜体 |
+| 引用 | `[@key]` | 参考文献 |
+| 列表 | `- 项目` / `1. 项目` | 无序/有序 |
+| 表格 | `| 表头 |` | 表格 |
 
-| 功能 | Markdown 语法 | 说明 |
-|------|--------------|------|
-| 一级标题 | `# 标题` | 对应论文章标题 |
-| 二级标题 | `## 标题` | 对应 1.1 小节 |
-| 三级标题 | `### 标题` | 对应 1.1.1 小节 |
-| 粗体 | `**文字**` | 加粗显示 |
-| 斜体 | `*文字*` | 斜体显示 |
-| 引用 | `[@key]` | 引用参考文献 |
-| 列表 | `- 项目` 或 `1. 项目` | 无序/有序列表 |
-| 表格 | `| 表头 |` | 普通表格 |
+### 元数据配置
 
-### YAML 元数据（Front Matter）
-
-在 `thesis.md` 开头的 `---` 区域内配置：
+`thesis.md` 文件开头 `---` 之间的配置：
 
 ```yaml
 ---
-title: "论文标题"           # 论文题目
-author: "作者姓名"          # 你的姓名
-date: "2026-04-14"        # 日期
-lang: "zh-CN"             # 语言（中文）
-toc: true                 # 是否生成目录
-toc-depth: 3              # 目录深度（1-6）
-numbersections: true      # 章节自动编号
-bibliography: refs.bib    # 参考文献文件
+title: "论文标题"
+author: "作者姓名"
+date: "2026-04-14"
+lang: "zh-CN"
+toc: true
+toc-depth: 3
+numbersections: true
+bibliography: refs.bib
 ---
 ```
 
-### 参考文献管理
+### 参考文献
 
-1. 在 `refs.bib` 中添加条目
-2. 支持类型：`@book`, `@article`, `@inproceedings`, `@manual`, `@online`
-3. 在正文中使用 `[@key]` 格式引用，如 `[@unityManual2024]`
-4. 引用多个文献：`[@key1;@key2]`
+支持的条目类型：`@book`, `@article`, `@inproceedings`, `@manual`, `@online`
 
-### 自定义 Word 模板
+引用格式：
+- 单个：`[@key]`
+- 多个：`[@key1;@key2]`
 
-如需修改论文格式：
+### 修改模板
 
-1. 打开 `template.docx`
-2. 在 Word 中修改样式（标题、正文、引用等）
-3. 保存后再次运行编译脚本
-
----
+1. 用 Word 打开 `template.docx`
+2. 修改样式（标题、正文、引用等）
+3. 保存后重新运行编译脚本
 
 ## 编译配置
 
-编辑脚本文件可自定义配置：
+编辑 `build-docx.sh` 修改这些变量：
 
 ```bash
-# build-docx.sh 中的配置变量
-INPUT="thesis.md"            # 输入 Markdown 文件
-OUTPUT="thesis.docx"         # 输出 Word 文件
-TEMPLATE="template.docx"     # 模板文件
-BIB="refs.bib"               # 参考文献文件
+INPUT="thesis.md"            # 输入文件
+OUTPUT="thesis.docx"         # 输出文件
+TEMPLATE="template.docx"     # 模板
+BIB="refs.bib"               # 参考文献
 CSL="china-national-standard-gb-t-7714-2015-numeric.csl"
 TOC_DEPTH=3                  # 目录深度
 ```
 
----
-
 ## 常见问题
 
-### Q: 编译时报 "pandoc: command not found"
-**A:** 未安装 Pandoc，请先按照「依赖项」章节安装。
+**编译时提示 "pandoc: command not found"**
 
-### Q: 参考文献引用显示不正确
-**A:** 
-1. 检查 `refs.bib` 中的条目语法是否正确
-2. 确认引用的 `key` 与文献条目匹配
-3. 检查 `thesis.md` 中 YAML 的 `bibliography` 路径是否正确
+没装 Pandoc，先装一下。
 
-### Q: 生成的 Word 格式不符合要求
-**A:** 
-1. 打开 `template.docx` 修改样式
-2. 确保标题样式、段落格式、字体等符合学校要求
-3. 重新运行编译脚本
+**参考文献引用显示不对**
 
-### Q: 中文字体显示异常
-**A:** 
-1. 确保系统安装了中文字体（如「思源黑体」「微软雅黑」等）
-2. 在 `template.docx` 中指定中文字体
+- 检查 `refs.bib` 语法
+- 确认引用的 key 和条目匹配
+- 检查 YAML 里的 bibliography 路径
 
-### Q: 目录页码不对
-**A:** 
-1. 在 Word 中打开生成的 `thesis.docx`
-2. 右键目录 → 「更新域」→ 「更新整个目录」
+**生成的 Word 格式不对**
 
----
+- 打开 `template.docx` 改样式
+- 调标题、段落、字体
+- 保存后重新编译
 
-## 技术栈
+**中文字体显示异常**
 
-- [Pandoc](https://pandoc.org/) - 文档转换引擎
-- [CSL (Citation Style Language)](https://citationstyles.org/) - 引用格式标准
-- GB/T 7714-2015 - 中国国家标准参考文献格式
+- 系统要有中文字体（思源黑体、微软雅黑等）
+- 在 `template.docx` 里指定字体
 
----
+**目录页码不对**
+
+- Word 里打开 `thesis.docx`
+- 右键目录 → 更新域 → 更新整个目录
+
+## 相关技术
+
+- [Pandoc](https://pandoc.org/) - 文档转换
+- [CSL](https://citationstyles.org/) - 引用格式标准
+- GB/T 7714-2015 - 国标参考文献格式
 
 ## 许可证
 
-本项目模板文件遵循相关学术规范，代码部分采用 MIT 许可证。
+模板遵循学术规范，代码用 MIT 许可证。
 
-CSL 样式文件来自 [Zotero Styles Repository](https://www.zotero.org/styles)，遵循 CC BY-SA 3.0 协议。
-
----
+CSL 样式来自 [Zotero Styles](https://www.zotero.org/styles)，CC BY-SA 3.0。
 
 ## 致谢
 
-感谢以下项目提供的工具和资源：
-- [Pandoc](https://pandoc.org/) - 文档转换神器
-- [Zotero](https://www.zotero.org/) - 参考文献管理
-- [GB/T 7714-2015 CSL](https://github.com/zotero-chinese/styles) - 中文引用格式
+用到了这些工具：
+- [Pandoc](https://pandoc.org/)
+- [Zotero](https://www.zotero.org/)
+- [zotero-chinese/styles](https://github.com/zotero-chinese/styles)
 
----
+## 反馈
 
-## 联系与反馈
-
-如有问题或建议，欢迎提交 Issue 或 Pull Request。
+有问题或建议可以提 Issue。
