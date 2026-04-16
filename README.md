@@ -37,11 +37,6 @@ GraduationThesis/
    └─ Final_thesis.docx
 ```
 
-## 当前约定（已生效）
-
-- `thesis`、`abstract`、`acknowledgments/致谢` 相关文件写入 `.gitignore`
-- 已在索引中移除被跟踪的 `thesis.md` 与 `thesis.docx`，后续不再默认提交
-
 ## 使用前提
 
 - `pandoc >= 2.14`
