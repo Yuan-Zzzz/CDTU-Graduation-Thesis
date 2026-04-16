@@ -1,6 +1,8 @@
-# 毕业论文写作仓库（Markdown → Word）
+## 前言
 
-这个仓库用于维护**论文工具链**（脚本、模板、引用样式），并支持用 Pandoc 将 Markdown 转为 Word
+这个仓库是一个**论文工具链**（脚本、模板、引用样式），支持用 Pandoc 将 Markdown 转为 Word。适用于CDTU的论文格式，让各位同学们可以专注论文内容的写作，不用在Word中被格式困扰
+
+如遇到问题 欢迎提ISSUE
 
 ## 当前目录结构
 
@@ -36,11 +38,6 @@ GraduationThesis/
    ├─ abstract.docx
    └─ Final_thesis.docx
 ```
-
-## 当前约定（已生效）
-
-- `thesis`、`abstract`、`acknowledgments/致谢` 相关文件写入 `.gitignore`
-- 已在索引中移除被跟踪的 `thesis.md` 与 `thesis.docx`，后续不再默认提交
 
 ## 使用前提
 
