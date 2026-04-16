@@ -44,6 +44,7 @@ pandoc "$INPUT" \
   --toc \
   --toc-depth="$TOC_DEPTH" \
   --metadata toc-title="目录" \
+  --metadata link-citations=true \
   -o "$THESIS_OUT"
 
 echo "生成致谢..."
@@ -63,5 +64,6 @@ python "${REPO_ROOT}/scripts/fix_headings.py" "$ABSTRACT_OUT"
 python "${REPO_ROOT}/scripts/fix_headings.py" "$ACK_OUT"
 python "${REPO_ROOT}/scripts/merge_docx.py"
 python "${REPO_ROOT}/scripts/fix_pages.py"
+python "${REPO_ROOT}/scripts/fix_citations.py" "$FINAL_OUT"
 
 echo "成功: 最终论文已生成 ${FINAL_OUT}"
