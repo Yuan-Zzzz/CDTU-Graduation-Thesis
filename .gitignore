@@ -1,0 +1,24 @@
+# Local Python environment
+venv/
+__pycache__/
+*.pyc
+
+# Local writing content (do not commit)
+thesis.md
+thesis.docx
+Final_thesis.docx
+
+abstract.md
+abstract.docx
+Abstract.md
+Abstract.docx
+
+acknowledgments.md
+acknowledgments.docx
+致谢.md
+致谢.docx
+
+# Optional local working folders
+manuscript/
+output/
+template_unpacked/
