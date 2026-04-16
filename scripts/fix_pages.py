@@ -52,16 +52,25 @@ if chap1_p is not None:
         new_sectPr.append(type_el)
     type_el.set(qn('w:val'), 'nextPage')
     
+    # Set Roman numerals for the front matter (this section)
+    pgNumType_front = new_sectPr.find(qn('w:pgNumType'))
+    if pgNumType_front is None:
+        pgNumType_front = OxmlElement('w:pgNumType')
+        new_sectPr.append(pgNumType_front)
+    pgNumType_front.set(qn('w:fmt'), 'upperRoman')
+    pgNumType_front.set(qn('w:start'), '1')
+    
     pPr.append(new_sectPr)
     
     # Insert before Chapter 1
     chap1_p.addprevious(sect_p)
     
-    # Update the document's main sectPr to restart page numbering at 1
-    pgNumType = doc_sectPr.find(qn('w:pgNumType'))
-    if pgNumType is None:
-        pgNumType = OxmlElement('w:pgNumType')
-        doc_sectPr.append(pgNumType)
-    pgNumType.set(qn('w:start'), '1')
+    # Update the document's main sectPr (main matter) to restart page numbering at 1 with decimal format
+    pgNumType_main = doc_sectPr.find(qn('w:pgNumType'))
+    if pgNumType_main is None:
+        pgNumType_main = OxmlElement('w:pgNumType')
+        doc_sectPr.append(pgNumType_main)
+    pgNumType_main.set(qn('w:fmt'), 'decimal')
+    pgNumType_main.set(qn('w:start'), '1')
 
 doc.save(str(FINAL_DOC))
