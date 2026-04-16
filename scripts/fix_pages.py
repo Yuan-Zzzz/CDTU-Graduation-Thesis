@@ -1,6 +1,9 @@
 from docx import Document
-from docx.oxml import OxmlElement
+from docx.oxml import OxmlElement, parse_xml
 from docx.oxml.ns import qn
+from docx.opc.constants import RELATIONSHIP_TYPE as RT
+from docx.opc.packuri import PackURI
+from docx.parts.hdrftr import FooterPart
 import copy
 from pathlib import Path
 
@@ -72,5 +75,44 @@ if chap1_p is not None:
         doc_sectPr.append(pgNumType_main)
     pgNumType_main.set(qn('w:fmt'), 'decimal')
     pgNumType_main.set(qn('w:start'), '1')
+
+# 3. Modify the footer for the main body (Section 1 onwards) to display "第xx页"
+if len(doc.sections) > 1:
+    # We only need to create the new footer part once, then we can link it to all subsequent sections
+    orig_footer_part = doc.sections[1].footer.part
+    
+    # Create a new footer XML by parsing the original one
+    new_footer_xml = copy.deepcopy(orig_footer_part._element)
+    
+    # Modify the new footer XML to add "第 " and " 页"
+    begins = new_footer_xml.xpath('.//w:fldChar[@w:fldCharType="begin"]')
+    ends = new_footer_xml.xpath('.//w:fldChar[@w:fldCharType="end"]')
+    
+    if begins and ends:
+        r_prefix = parse_xml('<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:t>第 </w:t></w:r>')
+        r_suffix = parse_xml('<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:t> 页</w:t></w:r>')
+        
+        begin_r = begins[0].getparent()
+        begin_r.addprevious(r_prefix)
+        
+        end_r = ends[0].getparent()
+        end_r.addnext(r_suffix)
+    
+    # Create a new FooterPart
+    new_partname = doc.part.package.next_partname(PackURI('/word/footer%d.xml'))
+    new_footer_part = FooterPart(new_partname, orig_footer_part.content_type, new_footer_xml, doc.part.package)
+    
+    # Relate the document part to the new footer part
+    rel_id = doc.part.relate_to(new_footer_part, RT.FOOTER)
+    
+    # Update the sectPr for all sections starting from Section 1 to point to the new footer
+    for i in range(1, len(doc.sections)):
+        sectPr = doc.sections[i]._sectPr
+        # Find the existing footerReference
+        footer_refs = sectPr.findall(qn('w:footerReference'))
+        for ref in footer_refs:
+            # We only replace the default footer
+            if ref.get(qn('w:type')) == 'default':
+                ref.set(qn('r:id'), rel_id)
 
 doc.save(str(FINAL_DOC))
