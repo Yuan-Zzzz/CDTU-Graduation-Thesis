@@ -60,8 +60,9 @@ fi
 source "${REPO_ROOT}/venv/bin/activate"
 pip install python-docx docxcompose > /dev/null 2>&1
 
-python "${REPO_ROOT}/scripts/fix_headings.py" "$ABSTRACT_OUT"
-python "${REPO_ROOT}/scripts/fix_headings.py" "$ACK_OUT"
+python "${REPO_ROOT}/scripts/fix_styles.py" "$ABSTRACT_OUT"
+python "${REPO_ROOT}/scripts/fix_styles.py" "$ACK_OUT"
+python "${REPO_ROOT}/scripts/fix_styles.py" "$THESIS_OUT"
 python "${REPO_ROOT}/scripts/merge_docx.py"
 python "${REPO_ROOT}/scripts/fix_pages.py"
 python "${REPO_ROOT}/scripts/fix_citations.py" "$FINAL_OUT"
