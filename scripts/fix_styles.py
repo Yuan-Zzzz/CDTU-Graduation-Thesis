@@ -396,5 +396,26 @@ for child in body:
                     apply_style_by_id_para(child, template_style_id)
                     print(f"保留: '{current_style_name}' -> styleId={template_style_id}")
 
+for para in doc.paragraphs:
+    p = para._element
+    pPr = p.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}pPr')
+    if pPr is not None:
+        numPr = pPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}numPr')
+        if numPr is not None:
+            ilvl = numPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ilvl')
+            if ilvl is not None:
+                ilvl_val = int(ilvl.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val'))
+                
+                ind = pPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ind')
+                if ind is None:
+                    ind = OxmlElement('w:ind')
+                    pPr.append(ind)
+                
+                left_val = str(420 * (ilvl_val + 1))
+                ind.set('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}left', left_val)
+                ind.set('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}hanging', '420')
+                
+                print(f"列表缩进修复: ilvl={ilvl_val} left={left_val} hanging=420")
+
 doc.save(filename)
 print(f"样式修复完成: {filename}")
