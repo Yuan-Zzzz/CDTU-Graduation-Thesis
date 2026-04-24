@@ -14,6 +14,15 @@ FINAL_DOC = REPO_ROOT / "output" / "Final_thesis.docx"
 doc = Document(str(FINAL_DOC))
 body = doc._element.body
 
+def insert_page_break_before(element):
+    pb_p = OxmlElement('w:p')
+    pb_r = OxmlElement('w:r')
+    pb_br = OxmlElement('w:br')
+    pb_br.set(qn('w:type'), 'page')
+    pb_r.append(pb_br)
+    pb_p.append(pb_r)
+    element.addprevious(pb_p)
+
 # 1. Find the sdt element (TOC) and insert a page break before it
 sdt_element = None
 for child in body:
@@ -22,19 +31,29 @@ for child in body:
         break
 
 if sdt_element is not None:
-    # Create a page break paragraph
-    pb_p = OxmlElement('w:p')
-    pb_r = OxmlElement('w:r')
-    pb_br = OxmlElement('w:br')
-    pb_br.set(qn('w:type'), 'page')
-    pb_r.append(pb_br)
-    pb_p.append(pb_r)
-    sdt_element.addprevious(pb_p)
+    insert_page_break_before(sdt_element)
 
-# 2. Find the first paragraph of Chapter 1
+for p in doc.paragraphs:
+    text = p.text.strip()
+    style = p.style.name if p.style else ''
+    
+    if text == '摘要' and '中文摘要' in style:
+        insert_page_break_before(p._element)
+    elif text == 'Abstract' and '英文摘要' in style:
+        insert_page_break_before(p._element)
+
+for p in doc.paragraphs:
+    text = p.text.strip()
+    if text.startswith('第') and '章' in text and len(text) < 30:
+        insert_page_break_before(p._element)
+    elif text == '参考文献':
+        insert_page_break_before(p._element)
+    elif text == '致谢' or (text.startswith('致') and '谢' in text and len(text) < 10):
+        insert_page_break_before(p._element)
+
 chap1_p = None
 for p in doc.paragraphs:
-    if p.text.startswith('第一章'):
+    if p.text.startswith('第一章') or p.text.startswith('第 1 章'):
         chap1_p = p._element
         break
 
