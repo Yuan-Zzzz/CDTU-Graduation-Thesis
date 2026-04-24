@@ -257,9 +257,32 @@ if sdt_element is not None and headings:
                 toc_para = child
         
         if toc_para is not None:
+            heading_page_map = {}
+            current_page = 1
+            
+            for para in doc.paragraphs:
+                p = para._element
+                text = para.text.strip()
+                
+                for br in p.findall('.//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}br'):
+                    if br.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}type') == 'page':
+                        current_page += 1
+                
+                pPr = p.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}pPr')
+                if pPr is not None:
+                    sectPr = pPr.find('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}sectPr')
+                    if sectPr is not None:
+                        current_page += 1
+                
+                for heading in headings:
+                    if heading['text'] == text:
+                        heading_page_map[text] = current_page
+                        break
+            
             for heading in headings:
                 level = heading['level']
                 text = heading['text']
+                page_num = heading_page_map.get(text, 1)
                 
                 if level == 1:
                     style_id = template_toc_styles.get('目录 一级标题', '68')
@@ -302,14 +325,15 @@ if sdt_element is not None and headings:
                 
                 r_page = OxmlElement('w:r')
                 t_page = OxmlElement('w:t')
-                t_page.text = '1'
+                t_page.text = str(page_num)
+                t_page.set('{http://www.w3.org/XML/1998/namespace}space', 'preserve')
                 r_page.append(t_page)
                 p.append(r_page)
                 
                 toc_para.addprevious(p)
             
             toc_generated = True
-            print(f"已生成 {len(headings)} 个目录条目")
+            print(f"已生成 {len(headings)} 个目录条目，页码已更新")
 for child in body:
     tag = child.tag.split('}')[-1] if '}' in child.tag else child.tag
     if tag == 'sdt':
