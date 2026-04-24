@@ -343,7 +343,7 @@ for child in body:
                                         break
                                 for t in content_child.iter():
                                     if t.tag == '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t':
-                                        t.text = '目\u3000\u3000\u3000\u3000录'
+                                        t.text = '目    录'
                                         t.set('{http://www.w3.org/XML/1998/namespace}space', 'preserve')
                                         break
                             print(f"目录映射: raw='{raw_style_id}' -> styleId={target_style_id}")
@@ -433,10 +433,10 @@ for para in doc.paragraphs:
         apply_style_by_id_para(p, '80')
         for t in p.iter():
             if t.tag == '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}t':
-                t.text = '致\u3000\u3000\u3000\u3000谢'
+                t.text = '致    谢'
                 t.set('{http://www.w3.org/XML/1998/namespace}space', 'preserve')
                 break
-        print(f"致谢标题映射: '致谢' -> '致\u3000\u3000\u3000\u3000谢' styleId=80")
+        print(f"致谢标题映射: '致谢' -> '致    谢' styleId=80")
         ack_section_started = True
         ref_section_started = False
     elif ref_section_started and text.startswith('['):
