@@ -273,9 +273,21 @@ current_page = 1
 lines_on_page = 0
 MAX_LINES_PER_PAGE = 45
 
+main_body_started = False
+chap1_element = None
+for p in doc.paragraphs:
+    if p.text.startswith('第一章') or p.text.startswith('第 1 章'):
+        chap1_element = p._element
+        break
+
 for para in doc.paragraphs:
     p = para._element
     text = para.text.strip()
+    
+    if p == chap1_element:
+        main_body_started = True
+        current_page = 1
+        lines_on_page = 0
     
     for br in p.findall('.//{http://schemas.openxmlformats.org/wordprocessingml/2006/main}br'):
         if br.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}type') == 'page':
@@ -298,10 +310,11 @@ for para in doc.paragraphs:
             current_page += 1
             lines_on_page = estimated_lines
     
-    for heading in headings:
-        if heading['text'] == text:
-            heading_page_map[heading['text']] = current_page
-            break
+    if main_body_started:
+        for heading in headings:
+            if heading['text'] == text:
+                heading_page_map[heading['text']] = current_page
+                break
 
 for child in body:
     tag = child.tag.split('}')[-1] if '}' in child.tag else child.tag
