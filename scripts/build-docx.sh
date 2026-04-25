@@ -36,11 +36,13 @@ pandoc "$ABSTRACT" \
   -o "$ABSTRACT_OUT"
 
 echo "生成正文..."
+MANUSCRIPT_DIR="$(dirname "$INPUT")"
 pandoc "$INPUT" \
   --bibliography "$BIB" \
   --csl "$CSL" \
   --citeproc \
   --reference-doc "$TEMPLATE" \
+  --resource-path="$MANUSCRIPT_DIR" \
   --toc \
   --toc-depth="$TOC_DEPTH" \
   --metadata toc-title="目录" \
@@ -64,6 +66,7 @@ python "${REPO_ROOT}/scripts/fix_styles.py" "$ABSTRACT_OUT"
 python "${REPO_ROOT}/scripts/fix_styles.py" "$ACK_OUT"
 python "${REPO_ROOT}/scripts/fix_styles.py" "$THESIS_OUT"
 python "${REPO_ROOT}/scripts/fix_tables.py" "$THESIS_OUT"
+python "${REPO_ROOT}/scripts/fix_images.py" "$THESIS_OUT"
 python "${REPO_ROOT}/scripts/merge_docx.py"
 python "${REPO_ROOT}/scripts/fix_pages.py"
 python "${REPO_ROOT}/scripts/fix_citations.py" "$FINAL_OUT"
